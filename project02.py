@@ -1,5 +1,5 @@
 from sqlalchemy import (
-    Column, Integer, String, ForeignKey)
+    Column, Integer, String, ForeignKey,select)
 from sqlalchemy.orm import relationship, sessionmaker
 from database import Base, engine,Session
 
@@ -25,13 +25,29 @@ class Task(Base):
 
 # 2-task
 Base.metadata.create_all(engine)
-
-Session = sessionmaker(engine)
+Session = sessionmaker(bind=engine)
 
 with Session() as session:
-    user01 = User(id = 1,name ="Ali",email = "ali@gmail.com")
-    user02 = User(id = 2,name ="Vali",email = "vali@gmail.com" )
-    user03 = User(id = 3,name ="John",email = "John4@gmail.com" )
+    user01 = User(name ="Ali",email = "ali@gmail.com")
+    user01.tasks = [
+        Task(title ="Kitob o'qish", status ="kutilmoqda"),
+        Task(title ="Darsga borish", status ="kutilmoqda"),
+        Task(title ="Yugurish", status ="kutilmoqda"),
+    ]
+
+    user02 = User(name ="Vali",email = "vali@gmail.com" )
+    user02.tasks = [
+        Task(title ="Najot Ta'limga borish", status ="tugalangan"),
+        Task(title ="Uy vazifasini bajarish", status ="kutilmoqda"),
+        Task(title ="Kitob o'qish", status ="kutilmoqda"),
+    ]
+
+    user03 = User(name ="John",email = "John4@gmail.com" )
+    user03.tasks = [
+        Task(title ="Darsga borish", status ="bajarilgan"),
+        Task(title ="Ovqatlans", status ="kutilmoqda"),
+        Task(title ="Mini Proekt yaratsh", status ="kutilmoqda"),
+    ]
     
     session.add(user01)
     session.add(user02)
@@ -41,6 +57,12 @@ with Session() as session:
 
     session.add_all([user01,user02,user03])
 
+# 3 - task
+stmt = select(Task)
+rows = session.execute(stmt).fetchall()
 
+for row in rows:
+    task = row[0] 
+    print(task.title, task.status)
 
 
