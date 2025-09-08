@@ -66,3 +66,19 @@ for row in rows:
     print(task.title, task.status)
 
 
+# 4-task
+
+users = session.query(User).all()
+
+for user in users:
+    for task in user.tasks:
+        print(f" {user.name} -> [{task.title}, {task.status}]")
+
+# 5 - task
+
+stmt = select(Task).where(Task.status == "done")
+result = session.execute(stmt).scalars()
+
+for task in result:
+    print(task.title, task.status)
+
