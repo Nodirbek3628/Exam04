@@ -15,8 +15,8 @@ DATABASE_URL = URL.create(
     database=config.DB_NAME
 )
 
-engin = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL)
 
 Base = declarative_base()
 
-Session = sessionmaker(engin)
+Session = sessionmaker(engine)
